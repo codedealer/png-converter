@@ -1,0 +1,42 @@
+{
+  "name": "png-converter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "pnpm run build && node dist/index.js",
+    "clean": "rimraf bin && mkdir bin",
+    "copy-sharp": "cpx \"node_modules/@img/sharp-win32-x64/lib/**/*\" bin",
+    "package": "pnpm run clean && pnpm run copy-sharp && pnpm run build && pkg . --out-path bin"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.1.2+sha512.127dc83b9ea10c32be65d22a8efb4a65fb952e8fefbdfded39bdc3c97efc32d31b48b00420df2c1187ace28c921c902f0cb5a134a4d032b8b5295cbfa2c681e2",
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
+    "@types/node": "^22.10.5",
+    "@yao-pkg/pkg": "^6.2.0",
+    "cpx2": "^8.0.0",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "bin": {
+    "png-converter": "dist/index.js"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": "dist/**/*",
+    "targets": [
+      "node20-win-x64"
+    ]
+  },
+  "dependencies": {
+    "cli-progress": "^3.12.0",
+    "inquirer": "^12.3.0",
+    "sharp": "^0.33.5",
+    "winston": "^3.17.0"
+  }
+}
