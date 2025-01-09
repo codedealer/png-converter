@@ -1,5 +1,5 @@
 import { statSync } from 'fs';
-import { join, isAbsolute, dirname } from 'path';
+import { dirname, isAbsolute, join } from 'path';
 import logger from './logger';
 import { getDefaultOptions, loadOptions, optionsExists, saveOptions } from "./options";
 import inquirer from "inquirer";
@@ -54,9 +54,11 @@ const main = async () => {
 
   const options = loadOptions(path);
 
-  const images = listImages(options.directory || path);
+  const images = listImages(options.directory, options.deep);
 
   if (images.length > 0) {
+    logger.info(`Path: ${options.directory}`);
+
     const { proceed } = await inquirer.prompt([
       {
         type: 'confirm',

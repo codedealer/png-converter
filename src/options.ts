@@ -1,5 +1,5 @@
 import logger from "./logger";
-import { readFileSync, existsSync, writeFileSync, statSync } from 'fs';
+import { existsSync, readFileSync, statSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { validatePath } from "./utils";
 
@@ -14,6 +14,8 @@ export interface Options {
   preserveAttributes: boolean;
   // stop on error or continue with the next file
   careful: boolean;
+  // whether to scan subdirectories
+  deep: boolean;
   imageOptions: {
     type: 'jpg' | 'webp';
     quality: number;
@@ -22,11 +24,16 @@ export interface Options {
   }
 }
 
+export interface ValidatedOptions extends Options {
+  directory: string;
+}
+
 const defaultOptions: Options = {
   directory: null,
   deleteOriginal: false,
   preserveAttributes: true,
   careful: false,
+  deep: false,
   imageOptions: {
     type: 'webp',
     quality: 90,
@@ -71,7 +78,7 @@ const validateJSONObject = (obj: unknown): obj is Options => {
   return typeof obj === 'object' && obj !== null && Object.keys(defaultOptions).every(key => key in obj);
 }
 
-const loadOptions = (directoryOrFile: string): Options => {
+const loadOptions = (directoryOrFile: string): ValidatedOptions => {
   if (!directoryOrFile) {
     throw new Error(`Config path not provided`);
   }
@@ -101,7 +108,7 @@ const loadOptions = (directoryOrFile: string): Options => {
   }
   options.directory = validatePath(options.directory, dirname(options.directory));
 
-  return { ...getDefaultOptions(), ...options };
+  return options as ValidatedOptions;
 }
 
 export { saveOptions, loadOptions, optionsExists, getDefaultOptions };

@@ -1,12 +1,27 @@
 import { readdirSync, statSync, unlinkSync, utimesSync } from 'fs';
-import { extname, basename } from 'path';
+import { basename, extname, join } from 'path';
 import sharp from 'sharp';
 import cliProgress from 'cli-progress';
 import { Options } from './options';
 
-const listImages = (directory: string): string[] => {
+const EXT_TO_CONVERT = ['.png'];
+
+const listImages = (directory: string, deep: boolean): string[] => {
+  let images: string[] = [];
   const files = readdirSync(directory);
-  return files.filter(file => ['.png'].includes(extname(file).toLowerCase()));
+
+  files.forEach(file => {
+    const fullPath = join(directory, file);
+    const stats = statSync(fullPath);
+
+    if (stats.isDirectory() && deep) {
+      images = images.concat(listImages(fullPath, deep));
+    } else if (stats.isFile() && EXT_TO_CONVERT.includes(extname(file).toLowerCase())) {
+      images.push(fullPath);
+    }
+  });
+
+  return images;
 };
 
 const convertImage = async (image: string, outputFile: string, imageOptions: Pick<Options, 'imageOptions'>): Promise<void> => {
