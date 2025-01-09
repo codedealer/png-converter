@@ -41,6 +41,7 @@ The application uses a configuration file named png-converter.json to specify op
   "deleteOriginal": false,
   "preserveAttributes": true,
   "careful": false,
+  "deep": false,
   "imageOptions": {
     "type": "webp",
     "quality": 90,
