@@ -2,6 +2,7 @@ import logger from "./logger";
 import { existsSync, readFileSync, statSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { validatePath } from "./utils";
+import { validateOptions } from "./validator";
 
 const CONFIG = 'png-converter.json' as const;
 
@@ -70,14 +71,6 @@ const saveOptions = (options: Options, directory: string): void => {
   writeFileSync(configPath, json);
 }
 
-/**
- * Make sure that the JSON structure is an object containing the expected keys from defaultOptions
- * @param obj
- */
-const validateJSONObject = (obj: unknown): obj is Options => {
-  return typeof obj === 'object' && obj !== null && Object.keys(defaultOptions).every(key => key in obj);
-}
-
 const loadOptions = (directoryOrFile: string): ValidatedOptions => {
   if (!directoryOrFile) {
     throw new Error(`Config path not provided`);
@@ -92,7 +85,7 @@ const loadOptions = (directoryOrFile: string): ValidatedOptions => {
 
   const json = readFileSync(configPath, 'utf8');
   const options = JSON.parse(json);
-  if (!validateJSONObject(options)) {
+  if (!validateOptions(options)) {
     throw new Error(`Invalid config file: ${configPath}`);
   } else {
     logger.info(`Config file loaded from '${configPath}'`);
