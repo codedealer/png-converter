@@ -6,6 +6,10 @@ import { Options } from './options';
 
 const EXT_TO_CONVERT = ['.png'];
 
+const isSupportedFile = (file: string): boolean => {
+  return EXT_TO_CONVERT.includes(extname(file).toLowerCase());
+}
+
 const listImages = (directory: string, deep: boolean): string[] => {
   let images: string[] = [];
   const files = readdirSync(directory);
@@ -16,7 +20,7 @@ const listImages = (directory: string, deep: boolean): string[] => {
 
     if (stats.isDirectory() && deep) {
       images = images.concat(listImages(fullPath, deep));
-    } else if (stats.isFile() && EXT_TO_CONVERT.includes(extname(file).toLowerCase())) {
+    } else if (stats.isFile() && isSupportedFile(file)) {
       images.push(fullPath);
     }
   });
@@ -85,4 +89,4 @@ const consumeList = async (images: string[], options: Options): Promise<Result> 
   return result;
 };
 
-export { listImages, consumeList };
+export { listImages, consumeList, isSupportedFile };

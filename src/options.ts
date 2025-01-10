@@ -8,7 +8,7 @@ const CONFIG = 'png-converter.json' as const;
 
 export interface Options {
   // directory to convert files at
-  directory: string | null;
+  directory?: string | null;
   // whether to delete the original files on success
   deleteOriginal: boolean;
   // whether to preserve the file attributes of the original
@@ -17,11 +17,13 @@ export interface Options {
   careful: boolean;
   // whether to scan subdirectories
   deep: boolean;
+  // watch for new files
+  watch: boolean;
   imageOptions: {
     type: 'jpg' | 'webp';
     quality: number;
-    maxWidth: number | null;
-    maxHeight: number | null;
+    maxWidth?: number | null;
+    maxHeight?: number | null;
   }
 }
 
@@ -35,6 +37,7 @@ const defaultOptions: Options = {
   preserveAttributes: true,
   careful: false,
   deep: false,
+  watch: false,
   imageOptions: {
     type: 'webp',
     quality: 90,
@@ -101,7 +104,7 @@ const loadOptions = (directoryOrFile: string): ValidatedOptions => {
   }
   options.directory = validatePath(options.directory, dirname(options.directory));
 
-  return options as ValidatedOptions;
+  return { ...getDefaultOptions(), ...options } as ValidatedOptions;
 }
 
 export { saveOptions, loadOptions, optionsExists, getDefaultOptions };

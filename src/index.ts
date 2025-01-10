@@ -5,6 +5,7 @@ import { getDefaultOptions, loadOptions, optionsExists, saveOptions } from "./op
 import inquirer from "inquirer";
 import { consumeList, listImages } from "./images";
 import { validatePath } from "./utils";
+import { watchDirectory } from "./watcher";
 
 const getWorkingDirectoryOrConfigFile = (): string => {
   const args = process.argv.slice(2);
@@ -76,8 +77,14 @@ const main = async () => {
         result.errors.forEach(err => logger.error(err));
       }
     }
-  } else {
+  } else if (!options.watch) {
     logger.warn(`No suitable images found in '${options.directory}'.`);
+  }
+
+  if (options.watch) {
+    const watcher = watchDirectory(options);
+    await inquirer.prompt([{ type: 'input', name: 'exit', message: 'Press Enter to stop watching...' }]);
+    await watcher.close();
   }
 
   await inquirer.prompt([{ type: 'input', name: 'exit', message: 'Press Enter to exit...' }]);

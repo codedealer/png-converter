@@ -11,6 +11,7 @@ const optionsSchema: JSONSchemaType<Options> = {
     preserveAttributes: { type: 'boolean' },
     careful: { type: 'boolean' },
     deep: { type: 'boolean' },
+    watch: { type: 'boolean' },
     imageOptions: {
       type: 'object',
       properties: {
@@ -22,7 +23,7 @@ const optionsSchema: JSONSchemaType<Options> = {
       required: ['type', 'quality'],
     },
   },
-  required: ['directory', 'deleteOriginal', 'preserveAttributes', 'careful', 'deep', 'imageOptions'],
+  required: ['deleteOriginal', 'preserveAttributes', 'careful', 'deep', 'imageOptions', 'watch'],
   additionalProperties: false,
 };
 
