@@ -42,6 +42,7 @@ The application uses a configuration file named png-converter.json to specify op
   "preserveAttributes": true,
   "careful": false,
   "deep": false,
+  "watch": false,
   "imageOptions": {
     "type": "webp",
     "quality": 90,
@@ -50,3 +51,4 @@ The application uses a configuration file named png-converter.json to specify op
   }
 }
 ```
+The `deep` option specifies whether to search for images recursively in subdirectories (for performance reasons the maximum depth is set to 4). The `watch` option enables watching the directory for changes and converting new images automatically.
