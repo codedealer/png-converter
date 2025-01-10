@@ -9,6 +9,7 @@ const watchDirectory = (options: ValidatedOptions) => {
     persistent: true,
     ignoreInitial: true,
     depth: options.deep ? 4 : 0, // limit the depth to 4 if deep is enabled
+    awaitWriteFinish: true,
   });
 
   watcher.on('add', async (path) => {
